@@ -26,7 +26,22 @@ Buat Tagihan -> Untuk Proses Potongan Format Baru
 <?php // ========================================================
 echo '<div class="table-responsive">'; ?>
 <table class="table table-borderless table-sm mt-4" id="<?php echo $fakultas . '-POT-BARU-' . $periode; ?>">
-	
+	<thead>
+		<tr>
+			<th class="center bold border-on">No</th>
+			<th class="center bold border-on">Tahun</th>
+			<th class="center bold border-on">Bulan</th>
+			<th class="center bold border-on">No Anggota KJPRI</th>
+			<th class="center bold border-on">NIP/NIK</th>
+			<th class="center bold border-on">No Pembiayaan</th>
+			<th class="center bold border-on">Kode Potongan</th>
+			<th class="center bold border-on">Tagihan ke</th>
+			<th class="center bold border-on">Lama Cicilan</th>
+			<th class="center bold border-on">Pokok (Rp)</th>
+			<th class="center bold border-on">Jasa (Rp)</th>
+			<th class="center bold border-on">Nama</th>
+		</tr>
+	</thead>
 </table>
 <script type="text/javascript">
 	$(".tombol-excel").click(function(e){
