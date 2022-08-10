@@ -3,7 +3,7 @@ Buat Tagihan
 ========================================================== */ 
 
 // Setting variable tagihan
-$tab 			= isset($_GET['tab']) ? $_GET['tab'] : '1';
+$tab 			= isset($_GET['tab']) ? $_GET['tab'] : '4';
 $pembiayaan 	= isset($_GET['pembiayaan']) ? $_GET['pembiayaan'] : [];
 $fakultas 		= isset($_GET['fakultas']) ? $_GET['fakultas'] : '';
 $periode 		= isset($_GET['periode']) ? $_GET['periode'] : date( 'Y-m', strtotime('+1 month') );
@@ -86,6 +86,9 @@ function ket_kode($koneksi, $kode){ // Mencari keterangan dari kode pembiayaan a
 	<li class="nav-item">
 		<a class="nav-link <?php if ($tab == '3'){echo 'active';} ?>" id="pills-rekap-tab" data-toggle="pill" href="#rekap" role="tab" aria-controls="rekap" aria-selected="<?php if ($tab == '3'){echo 'true';} else {echo 'false';} ?>">Rekap Tagihan</a>
 	</li>
+	<li class="nav-item">
+		<a class="nav-link <?php if ($tab == '4'){echo 'active';} ?>" id="pills-potnew-tab" data-toggle="pill" href="#potnew" role="tab" aria-controls="potnew" aria-selected="<?php if ($tab == '4'){echo 'true';} else {echo 'false';} ?>">Potongan Baru</a>
+	</li>
 </ul>
 <div class="tab-content tiga" id="pills-tabContent">
 	<script type="text/javascript">
@@ -94,6 +97,8 @@ function ket_kode($koneksi, $kode){ // Mencari keterangan dari kode pembiayaan a
 			$("#input-tabungan").collapse('<?php if ($rekening != '') {echo'show';} else {echo'hide';} ?>');
 			$("#input-manual-rekap").collapse('<?php if ($kwitansi != '') {echo'show';} else {echo'hide';} ?>');
 			$("#input-tab-rekap").collapse('<?php if ($rekening != '') {echo'show';} else {echo'hide';} ?>');
+			$("#input-manual-potnew").collapse('<?php if ($kwitansi != '') {echo'show';} else {echo'hide';} ?>');
+			$("#input-tab-potnew").collapse('<?php if ($rekening != '') {echo'show';} else {echo'hide';} ?>');
 		});
 	</script>
 
@@ -475,6 +480,118 @@ function ket_kode($koneksi, $kode){ // Mencari keterangan dari kode pembiayaan a
 		</div>
 	</div>
 	</div>
+
+	<!-- Set Potongan Baru -->
+	<div class="tab-pane fad <?php if ($tab == '4'){echo 'show active';} ?>" id="potnew" role="tabpanel" aria-labelledby="pills-potnew-tab">
+	<div class="card mb-3">
+		<div class="card-header">
+			<h5>Setting Tagihan Potong Gaji Format Baru</h5>
+		</div>
+		<div class="card-body">
+			<form action="">
+			<input type="hidden" name="menu" value="tghn">
+			<input type="hidden" name="tab" value="4">
+			<div class="row">
+				<div class="col-md-9">
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="fakultas">Fakultas</label>
+							<select id="fakultas" name="fakultas" class="custom-select">
+								<option value="-1">Pilih</option>
+								<?php // Kueri untuk menampilkan fakultas 
+								foreach(list_fakultas($koneksi_ambil) as $list_fakultas){
+									echo '<option value="' . $list_fakultas['kode'] . '"';
+									if ($list_fakultas['kode'] == $fakultas){echo ' selected="selected"';}
+									echo '>' . $list_fakultas['kode'] . ' - ' . $list_fakultas['keterangan'] . '</option>';
+								} ?>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="periode">Periode</label>
+							<?php list_periode($periode, 'periode'); ?>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-9">
+						<label>Input nominal manual untuk jumlah yang berbeda tidak mengikuti sistem. Ketiga kolom harus di isi dengan jumlah input yang sama. Jika tidak ingin mengganti salah satunya (pokoknya saja atau jasanya saja) silakan masukkan " " (spasi) kemudian diikuti tanda "," (koma)</label>
+					</div>
+					<div class="col-sm-3">
+						<a href="#" role="button" class="btn btn-outline-secondary btn-sm mb-3" data-toggle="collapse" data-target="#input-manual-potnew" style="width: 100%;">Input Nominal Manual</a>
+					</div>
+				</div>
+				<div class="row collapse" id="input-manual-potnew">
+					<div class="col-sm-12">
+						<div class="form-group">
+							<label for="kwitansi">NO Kuwitansi (pisahkan dg "," koma)</label>
+							<textarea id="kwitansi" name="kwitansi" class="form-control" rows="3"><?php echo $kwitansi; ?></textarea>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="custom-pokok">Pokok (pisahkan dg "," koma)</label>
+							<textarea id="custom-pokok" name="custom-pokok" class="form-control" rows="3"><?php echo $custom_pokok; ?></textarea>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="custom-jasa">Jasa (pisahkan dg "," koma)</label>
+							<textarea id="custom-jasa" name="custom-jasa" class="form-control" rows="3"><?php echo $custom_jasa; ?></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-9">
+						Tambahkan tabungan secara manual yang belum di set secara system. Kedua kolom harus di isi dengan jumlah input yang sama. Setiap inputan pisahkan dengan tanda "," (koma).
+					</div>
+					<div class="col-sm-3">
+						<a href="#" role="button" class="btn btn-outline-secondary btn-sm mb-3" data-toggle="collapse" data-target="#input-tab-potnew" style="width: 100%;">Tambah Tabungan</a>
+					</div>
+				</div>
+				<div class="row collapse" id="input-tab-potnew">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="rekening">NO Rekening (pisahkan dg "," koma)</label>
+							<textarea id="rekening" name="rekening" class="form-control" rows="2"><?php echo $rekening; ?></textarea>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label for="nominal">Nominal (pisahkan dg "," koma)</label>
+							<textarea id="nominal" name="nominal" class="form-control" rows="2"><?php echo $nominal; ?></textarea>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="col-md-3">
+					<div class="card border-primary">
+						<div class="card-body">
+							<div class="form-group">
+								<label for="periode-akhir">Tgl Cut Off</label>
+								<input class="form-control" value="<?php echo $periode_akhir; ?>" type="text" id="periode-akhir" name="periode-akhir">
+							</div>
+							<div class="form-group form-check">
+								<input class="form-check-input" type="checkbox" value="Y" id="kurangjasa" name="kurangjasa" <?php if ($kurangjasa == 'Y') {echo 'checked="checked"';} ?>>
+								<label class="form-check-label" for="kurangjasa">Hitung kekurangan jasa belum terbayar</label>
+							</div>
+							<div class="form-group form-check">
+								<input class="form-check-input" type="checkbox" value="OK" id="bariskosong" name="bariskosong" <?php if ($bariskosong == 'OK' || $fakultas == 'L') {echo 'checked="checked"';} ?>>
+								<label class="form-check-label" for="bariskosong">Hilangkan baris kosong</label>
+							</div>
+							<input type="hidden" value="<?php echo $ttd; ?>" id="ttd" name="ttd">
+							<button type="submit" class="btn btn-primary" style="width: 100%;">Proses Tagihan</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+	</div>
+
 </div>
 <?php // ====================================================
 // Array kwitansi manual
@@ -497,9 +614,10 @@ if($rekening != ''){
 if(isset($_GET['tab']) && $_GET['tab'] != ''){
 	echo '<button class="btn btn-primary float-left mt-4 mb-2 tombol-print" onclick="window.print()">Siap Cetak</button>';
 	echo '<button class="btn btn-success float-right mt-4 mb-2 tombol-excel">Ekport Excel (Hanya Tabel Teratas)</button>';
-	if( ($_GET['tab'] == '1') && (!isset($_GET['import'])) ){ require('cetak-pembiayaan.php'); } 
-	else if( ($_GET['tab'] == '2') && (!isset($_GET['import'])) ){ require('cetak-tabungan.php'); }
-	else if($_GET['tab'] == '3'){ require('cetak-rekap.php'); }
+	if( ( $_GET['tab'] == '1' ) && ( !isset($_GET['import']) ) ){ require('cetak-pembiayaan.php'); } 
+	else if( ( $_GET['tab'] == '2' ) && ( !isset($_GET['import']) ) ){ require('cetak-tabungan.php'); }
+	else if( $_GET['tab'] == '3' ){ require('cetak-rekap.php'); }
 	else if( ($_GET['tab'] == '1') && ($_GET['import'] == 'Y') ){ require('import-pembiayaan.php'); }
 	else if( ($_GET['tab'] == '2') && ($_GET['import'] == 'Y') ){ require('import-tabungan.php'); }
+	else if( $_GET['tab'] == '4' ){ require('cetak-potongan-baru.php'); }
 }
