@@ -29,7 +29,7 @@ if(!isset($_SESSION['username'])){
 	require('inc/login.php');
 } else {
 	require('inc/menu.php');
-	echo '<div class="container">';
+	echo '<div class="container-fluid">';
 	if($_SESSION['username'] == 'superadmin'){
 		if($_GET['menu'] == 'cnfg'){ require('config/config.php'); }
 		if($_GET['menu'] == 'set_tag'){ require('config/set-tag.php'); }
