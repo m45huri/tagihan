@@ -157,8 +157,39 @@ echo '<div class="table-responsive">'; ?>
 	// Proses data semua array
 	ksort($semua_kueri);
 	$semua_kueri_baru = array();
-	foreach($semua_kueri as $semua_kueri_group){
-		$semua_kueri_baru[$semua_kueri_group['nama']][] = $semua_kueri_group;
+	if( $totalsaja != 'OK' ){
+		foreach($semua_kueri as $semua_kueri_group){
+			$semua_kueri_baru[$semua_kueri_group['nama']][] = $semua_kueri_group;
+		}
+	} else{
+		foreach($semua_kueri as $semua_kueri_group){
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['nip'] 	= $semua_kueri_group['nip'];
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['anggota'] = $semua_kueri_group['anggota'];
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['nama'] 	= $semua_kueri_group['nama'];
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['faktur'] 	= 'KJPRI/TAG/' . substr( $periode, 5, 2 ) . '/' . substr( $periode, 0, 4 );
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['jenis'] 	= 'Total';
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['lama'] 	= '1';
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['ke'] 		= '1';
+			
+			if( !isset( $semua_kueri_baru[$semua_kueri_group['nama']][0]['pokok'] ) ){
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['pokok'] = $semua_kueri_group['pokok'];
+			} else {
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['pokok'] += $semua_kueri_group['pokok'];
+			}
+			
+			if( !isset( $semua_kueri_baru[$semua_kueri_group['nama']][0]['jasa'] ) ){
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['jasa'] = $semua_kueri_group['jasa'];
+			} else {
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['jasa'] += $semua_kueri_group['jasa'];
+			}
+			
+			if( !isset( $semua_kueri_baru[$semua_kueri_group['nama']][0]['jumlah'] ) ){
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['jumlah'] = $semua_kueri_group['jumlah'];
+			} else {
+				$semua_kueri_baru[$semua_kueri_group['nama']][0]['jumlah'] += $semua_kueri_group['jumlah'];
+			}
+			
+		}
 	}
 	unset($semua_kueri);
 	ksort($semua_kueri_baru); ?>

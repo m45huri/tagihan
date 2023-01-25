@@ -16,6 +16,7 @@ $tabungan		= isset($_GET['tabungan']) ? $_GET['tabungan'] : [] ;
 $rekening		= isset($_GET['rekening']) ? strtoupper( str_replace(' ', '', $_GET['rekening']) ) : '';
 $nominal		= isset($_GET['nominal']) ? str_replace(' ', '', $_GET['nominal']) : '';
 $bariskosong	= isset($_GET['bariskosong']) ? $_GET['bariskosong'] : '';
+$totalsaja		= isset($_GET['totalsaja']) ? $_GET['totalsaja'] : '';
 $kolomfaktur	= isset($_GET['kolomfaktur']) ? $_GET['kolomfaktur'] : '';
 $ttd 			= isset($_GET['ttd']) ? $_GET['ttd'] : '';
 $url_import 	= explode('?', $_SERVER['REQUEST_URI']);
@@ -580,6 +581,10 @@ function ket_kode($koneksi, $kode){ // Mencari keterangan dari kode pembiayaan a
 							<div class="form-group form-check">
 								<input class="form-check-input" type="checkbox" value="OK" id="bariskosong" name="bariskosong" <?php if ($bariskosong == 'OK' || $fakultas == 'L') {echo 'checked="checked"';} ?>>
 								<label class="form-check-label" for="bariskosong">Hilangkan baris kosong</label>
+							</div>
+							<div class="form-group form-check">
+								<input class="form-check-input" type="checkbox" value="OK" id="totalsaja" name="totalsaja" <?php if ($totalsaja == 'OK' || $fakultas == 'A') {echo 'checked="checked"';} ?>>
+								<label class="form-check-label" for="totalsaja">Tampilkan total saja</label>
 							</div>
 							<input type="hidden" value="<?php echo $ttd; ?>" id="ttd" name="ttd">
 							<button type="submit" class="btn btn-primary" style="width: 100%;">Proses Tagihan</button>
