@@ -168,8 +168,8 @@ echo '<div class="table-responsive">'; ?>
 			$semua_kueri_baru[$semua_kueri_group['nama']][0]['nama'] 	= $semua_kueri_group['nama'];
 			$semua_kueri_baru[$semua_kueri_group['nama']][0]['faktur'] 	= 'KJPRI/TAG/' . substr( $periode, 5, 2 ) . '/' . substr( $periode, 0, 4 );
 			$semua_kueri_baru[$semua_kueri_group['nama']][0]['jenis'] 	= 'Total';
-			$semua_kueri_baru[$semua_kueri_group['nama']][0]['lama'] 	= '1';
-			$semua_kueri_baru[$semua_kueri_group['nama']][0]['ke'] 		= '1';
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['lama'] 	= '12';
+			$semua_kueri_baru[$semua_kueri_group['nama']][0]['ke'] 		= substr( $periode, 5, 2 );
 			
 			if( !isset( $semua_kueri_baru[$semua_kueri_group['nama']][0]['pokok'] ) ){
 				$semua_kueri_baru[$semua_kueri_group['nama']][0]['pokok'] = $semua_kueri_group['pokok'];
@@ -199,14 +199,15 @@ echo '<div class="table-responsive">'; ?>
 			<th class="center bold border-on">Tahun</th>
 			<th class="center bold border-on">Bulan</th>
 			<th class="center bold border-on">No Anggota KJPRI</th>
-			<th class="center bold border-on">NIP/NIK</th>
 			<th class="center bold border-on">No Pembiayaan</th>
 			<th class="center bold border-on">Kode Potongan</th>
 			<th class="center bold border-on">Tagihan ke</th>
 			<th class="center bold border-on">Lama Cicilan</th>
+			<th class="center bold border-on">Jumlah (Rp)</th>
 			<th class="center bold border-on">Pokok (Rp)</th>
 			<th class="center bold border-on">Jasa (Rp)</th>
 			<th class="center bold border-on">Nama</th>
+			<th class="center bold border-on">NIP/NIK</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -214,10 +215,12 @@ echo '<div class="table-responsive">'; ?>
 		$nomor			= 1;
 		$total_pokok	= 0;
 		$total_jasa 	= 0;
+		$total_jumlah	= 0;
 		foreach($semua_kueri_baru as $table_group){
 			foreach($table_group as $table){
 				$total_pokok 	+= $table['pokok'];
 				$total_jasa 	+= $table['jasa'];
+				$total_jumlah	+= $table['jumlah'];
 				$koreksi_nip	 = str_replace(' ', '', $table['nip']);
 				$revisi_nip		 = $koreksi_nip != '' ? '\'' . $koreksi_nip : ''; ?>
 		<tr>
@@ -225,33 +228,30 @@ echo '<div class="table-responsive">'; ?>
 			<td class="center"><?php echo substr( $periode, 0, 4 ); ?></td>
 			<td class="center"><?php echo substr( $periode, 5, 2 ); ?></td>
 			<td class="center"><?php echo $table['anggota']; ?></td>
-			<td><?php echo $revisi_nip; ?></td>
 			<td><?php echo $table['faktur']; ?></td>
 			<td class="center"><?php echo $table['jenis']; ?></td>
 			<td class="center"><?php echo $table['ke']; ?></td>
 			<td class="center"><?php echo $table['lama']; ?></td>
+			<td class="right"><?php echo number_format($table['jumlah'],0,',','.'); ?></td>
 			<td class="right"><?php echo number_format($table['pokok'],0,',','.'); ?></td>
 			<td class="right"><?php echo number_format($table['jasa'],0,',','.'); ?></td>
 			<td><?php echo substr($table['nama'], 0, 27) . ' - ' . $fakultas; ?></td>
+			<td><?php echo $revisi_nip; ?></td>
 		</tr>
 		<?php }
 			if( $bariskosong != 'OK' && $table_group != end($semua_kueri_baru) ){
-				echo '<tr><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td></tr>';
+				echo '<tr><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td><td class="height"></td></tr>';
 			}
 		} ?>
-		<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+		<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 		<tr>
-			<td colspan="3" class="border-t"><?php echo 'Cut off : tgl ' . $periode_akhir; ?></td>
-			<td colspan="6" class="border-t"></td>
-			<td class="right border-t"><?php echo number_format($total_pokok,0,',','.'); ?></td>
-			<td class="right border-t"><?php echo number_format($total_jasa,0,',','.'); ?></td>
-			<td class="border-t"></td>
-		</tr>
-		<tr>
-			<td colspan="9" class="border-b"></td>
-			<td class="right bold border-b">Total</td>
-			<td class="right bold border-b"><?php echo number_format($total_pokok + $total_jasa,0,',','.'); ?></td>
-			<td class="border-b"></td>
+			<td colspan="3" class="border-on"><?php echo 'Cut off : tgl ' . $periode_akhir; ?></td>
+			<td colspan="4" class="border-on"></td>
+			<td class="right border-on bold">Total</td>
+			<td class="right border-on bold"><?php echo number_format($total_jumlah,0,',','.'); ?></td>
+			<td class="right border-on bold"><?php echo number_format($total_pokok,0,',','.'); ?></td>
+			<td class="right border-on bold"><?php echo number_format($total_jasa,0,',','.'); ?></td>
+			<td colspan="2" class="border-on"></td>
 		</tr>
 	</tbody>
 </table>
